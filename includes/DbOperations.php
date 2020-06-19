@@ -43,9 +43,25 @@
             return $stmt->num_rows > 0;
         }
 
+        public function userLoginByEmail($email, $pass) {
+            $password = md5($pass);            
+            $stmt = $this->con->prepare("SELECT id FROM users WHERE email = ? AND password = ?");
+            $stmt->bind_param("ss", $email, $password);
+            $stmt->execute();
+            $stmt->store_result();
+            return $stmt->num_rows > 0;
+        }
+
         public function getUserByUsername($username) {
             $stmt = $this->con->prepare("SELECT * FROM users WHERE username = ?");
             $stmt->bind_param("s", $username);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_assoc();
+        }
+
+        public function getUserByEmail($email) {
+            $stmt = $this->con->prepare("SELECT * FROM users WHERE email = ?");
+            $stmt->bind_param("s", $email);
             $stmt->execute();
             return $stmt->get_result()->fetch_assoc();
         }
